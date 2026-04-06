@@ -485,6 +485,36 @@
   }
   .dest-buy:hover { background: var(--accent2); }
 
+  .dest-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+  }
+
+  .dest-guide {
+    background: transparent;
+    color: var(--accent3);
+    border: 1px solid rgba(0,212,255,0.45);
+    padding: 12px 22px;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: none;
+    transform: translateY(4px);
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+    white-space: nowrap;
+  }
+  .dest-guide:hover {
+    background: rgba(0,212,255,0.08);
+    border-color: var(--accent3);
+    color: var(--text);
+  }
+  .dest-card:hover .dest-guide { transform: translateY(0); opacity: 1; }
+
   .dest-features {
     display: flex;
     gap: 16px;
@@ -930,6 +960,147 @@
   }
   .modal-confirm:hover { background: var(--accent2); }
 
+  /* DESTINATION FIELD GUIDE POPUP */
+  .guide-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(2,2,10,0.92);
+    z-index: 1001;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+    backdrop-filter: blur(10px);
+  }
+  .guide-overlay.active { opacity: 1; pointer-events: all; }
+
+  .guide-modal {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    max-width: 720px;
+    width: 100%;
+    max-height: min(85vh, 900px);
+    display: flex;
+    flex-direction: column;
+    transform: translateY(16px);
+    transition: transform 0.35s cubic-bezier(0.23, 1, 0.32, 1);
+    position: relative;
+    text-align: left;
+  }
+  .guide-overlay.active .guide-modal { transform: translateY(0); }
+
+  .guide-header {
+    padding: 28px 28px 0 56px;
+    flex-shrink: 0;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 20px;
+  }
+  .guide-icon {
+    font-size: 42px;
+    display: block;
+    margin-bottom: 8px;
+    line-height: 1;
+  }
+  .guide-modal-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(36px, 6vw, 52px);
+    letter-spacing: 2px;
+    color: var(--accent);
+    line-height: 1.05;
+  }
+  .guide-sub {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent3);
+    margin-top: 8px;
+  }
+
+  .guide-scroll {
+    overflow-y: auto;
+    padding: 24px 28px 32px 56px;
+    flex: 1;
+    min-height: 0;
+  }
+  .guide-scroll::-webkit-scrollbar { width: 6px; }
+  .guide-scroll::-webkit-scrollbar-thumb {
+    background: rgba(232,197,71,0.25);
+    border-radius: 3px;
+  }
+
+  .guide-lead {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 15px;
+    color: var(--muted);
+    line-height: 1.75;
+    margin-bottom: 28px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .guide-h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 2px;
+    color: var(--text);
+    margin-bottom: 14px;
+    margin-top: 8px;
+  }
+  .guide-h3:first-of-type { margin-top: 0; }
+
+  .guide-list {
+    list-style: none;
+    margin-bottom: 28px;
+    padding: 0;
+  }
+  .guide-list li {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.75;
+    padding: 10px 0 10px 20px;
+    border-left: 2px solid rgba(232,197,71,0.35);
+    margin-bottom: 6px;
+  }
+  .guide-list li strong {
+    color: var(--text);
+    font-weight: 700;
+  }
+
+  .guide-quote {
+    font-size: 12px;
+    font-style: italic;
+    color: var(--accent3);
+    line-height: 1.7;
+    padding: 16px 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    margin-top: 8px;
+  }
+
+  .guide-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-size: 20px;
+    cursor: none;
+    transition: color 0.2s;
+    font-family: 'Space Mono', monospace;
+    z-index: 2;
+  }
+  .guide-close:hover { color: var(--accent); }
+
+  @media (max-width: 768px) {
+    .guide-header { padding: 24px 48px 16px 24px; }
+    .guide-scroll { padding: 20px 24px 28px; }
+  }
+
   /* ANIMATIONS */
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(30px); }
@@ -1053,7 +1224,10 @@
             <p class="dest-price-label">Starting From</p>
             <p class="dest-price">$4.2M</p>
           </div>
-          <button class="dest-buy" onclick="openModal('Mars', '$4,200,000', '6–9 months', 'Valles Marineris Gateway')">Book Now</button>
+          <div class="dest-actions">
+            <button type="button" class="dest-guide" onclick="event.stopPropagation(); openDestGuide('mars')">Field Guide</button>
+            <button class="dest-buy" onclick="event.stopPropagation(); openModal('Mars', '$4,200,000', '6–9 months', 'Valles Marineris Gateway')">Book Now</button>
+          </div>
         </div>
       </div>
     </div>
@@ -1079,7 +1253,10 @@
             <p class="dest-price-label">Starting From</p>
             <p class="dest-price">$6.8M</p>
           </div>
-          <button class="dest-buy" onclick="openModal('Venus', '$6,800,000', '3–4 months', 'Ishtar Cloud City Terminal')">Book Now</button>
+          <div class="dest-actions">
+            <button type="button" class="dest-guide" onclick="event.stopPropagation(); openDestGuide('venus')">Field Guide</button>
+            <button class="dest-buy" onclick="event.stopPropagation(); openModal('Venus', '$6,800,000', '3–4 months', 'Ishtar Cloud City Terminal')">Book Now</button>
+          </div>
         </div>
       </div>
     </div>
@@ -1105,7 +1282,10 @@
             <p class="dest-price-label">Starting From</p>
             <p class="dest-price">$18M</p>
           </div>
-          <button class="dest-buy" onclick="openModal('Titan', '$18,000,000', '7 years', 'Kraken Mare Station')">Book Now</button>
+          <div class="dest-actions">
+            <button type="button" class="dest-guide" onclick="event.stopPropagation(); openDestGuide('titan')">Field Guide</button>
+            <button class="dest-buy" onclick="event.stopPropagation(); openModal('Titan', '$18,000,000', '7 years', 'Kraken Mare Station')">Book Now</button>
+          </div>
         </div>
       </div>
     </div>
@@ -1131,7 +1311,10 @@
             <p class="dest-price-label">Starting From</p>
             <p class="dest-price">$22M</p>
           </div>
-          <button class="dest-buy" onclick="openModal('Pluto', '$22,000,000', '9–12 years', 'Sputnik Planitia Base')">Book Now</button>
+          <div class="dest-actions">
+            <button type="button" class="dest-guide" onclick="event.stopPropagation(); openDestGuide('pluto')">Field Guide</button>
+            <button class="dest-buy" onclick="event.stopPropagation(); openModal('Pluto', '$22,000,000', '9–12 years', 'Sputnik Planitia Base')">Book Now</button>
+          </div>
         </div>
       </div>
     </div>
@@ -1157,7 +1340,10 @@
             <p class="dest-price-label">Starting From</p>
             <p class="dest-price">$2.4B</p>
           </div>
-          <button class="dest-buy" onclick="openModal('Kepler-452b', '$2,400,000,000', 'Generational voyage', 'Kepler Orbital Gateway')">Book Now</button>
+          <div class="dest-actions">
+            <button type="button" class="dest-guide" onclick="event.stopPropagation(); openDestGuide('kepler')">Field Guide</button>
+            <button class="dest-buy" onclick="event.stopPropagation(); openModal('Kepler-452b', '$2,400,000,000', 'Generational voyage', 'Kepler Orbital Gateway')">Book Now</button>
+          </div>
         </div>
       </div>
     </div>
@@ -1183,7 +1369,10 @@
             <p class="dest-price-label">Starting From</p>
             <p class="dest-price">$890M</p>
           </div>
-          <button class="dest-buy" onclick="openModal('Proxima Centauri b', '$890,000,000', '~20 years (light sail)', 'Alpha Centauri Waypoint')">Book Now</button>
+          <div class="dest-actions">
+            <button type="button" class="dest-guide" onclick="event.stopPropagation(); openDestGuide('proxima')">Field Guide</button>
+            <button class="dest-buy" onclick="event.stopPropagation(); openModal('Proxima Centauri b', '$890,000,000', '~20 years (light sail)', 'Alpha Centauri Waypoint')">Book Now</button>
+          </div>
         </div>
       </div>
     </div>
@@ -1414,6 +1603,19 @@
   </div>
 </div>
 
+<!-- DESTINATION FIELD GUIDE -->
+<div class="guide-overlay" id="guideOverlay" role="dialog" aria-modal="true" aria-labelledby="guideTitleText">
+  <div class="guide-modal">
+    <button type="button" class="guide-close" onclick="closeDestGuide()" aria-label="Close field guide">✕</button>
+    <div class="guide-header">
+      <span class="guide-icon" id="guideIcon" aria-hidden="true"></span>
+      <h2 class="guide-modal-title" id="guideTitleText"></h2>
+      <p class="guide-sub" id="guideSub"></p>
+    </div>
+    <div class="guide-scroll" id="guideScroll"></div>
+  </div>
+</div>
+
 <script>
   // Custom Cursor
   const cursor = document.getElementById('cursor');
@@ -1512,6 +1714,7 @@
 
   // Modal
   function openModal(planet, price, duration, terminal) {
+    closeDestGuide();
     const detail = document.getElementById('modalDetail');
     detail.innerHTML = `
       <div class="modal-row"><span class="modal-row-label">Destination</span><span class="modal-row-val">${planet}</span></div>
@@ -1529,6 +1732,165 @@
 
   document.getElementById('modalOverlay').addEventListener('click', (e) => {
     if (e.target === e.currentTarget) closeModal();
+  });
+
+  // Destination field guides (creative itineraries — TELETREKS lore)
+  const DEST_GUIDES = {
+    mars: {
+      icon: '🔴',
+      title: 'Mars',
+      sub: 'Field Guide // Red Dust & Rising Cities',
+      lead: 'Bring lip balm and humility. Mars does not care that you flew six months to stand on her rust. She will still steal your hat in a dust devil and make you love her for it.',
+      sights: [
+        { t: 'Valles Marineris Rim Walk', d: 'Earth\'s Grand Canyon could nap inside this crack. Sunrise paints the walls in layers of rose and rust — the original layered latte.' },
+        { t: 'Olympus Mons Base Camp', d: 'So wide you cannot see the summit curve. The "summit" is less a peak than a mood. Bragging rights included; oxygen sold separately.' },
+        { t: 'Phobos & Deimos Sky Hour', d: 'Two potato moons, wrong-way orbits, weirdly fast. Catch a double moonrise from any highland ridge; bring a tripod and a poet.' },
+        { t: 'Terraforming Observation Decks', d: 'Glass domes where you watch algae blooms spread like optimistic mold. Humanity\'s slowest reality show — and you are in the audience.' }
+      ],
+      activities: [
+        { t: 'Low-G Dune Parkour', d: 'Bounce between ancient ripple marks where no wave ever touched. Instructors insist you sign the waiver in cursive, on paper, like pioneers.' },
+        { t: 'Dust Storm Jazz Night', d: 'Acoustic sets inside a pressure shell while the world outside goes apricot-opaque. The band tunes by vibration through the floor.' },
+        { t: 'Rover Cosplay Relay', d: 'Teams dress as famous bots (Sojourner energy welcome). Winner gets a jar of genuine Martian fines — do not open indoors.' },
+        { t: 'Terraforming Volunteer Shift', d: 'Half-day in a greenhouse dome: seeding, sensors, and earnest small talk with biologists who name every plant.' }
+      ],
+      quote: 'TELETREKS note: If you hear tapping on the hull during a storm, it is never ghosts. It is pebbles. Usually.'
+    },
+    venus: {
+      icon: '☁️',
+      title: 'Venus',
+      sub: 'Field Guide // Fifty Kilometers Above Hell',
+      lead: 'You are not landing on Venus; you are befriending her from a respectful altitude. Below is pressure-cooked poetry; beside you are gardens in balloons.',
+      sights: [
+        { t: 'Ishtar Cloud City Spine', d: 'A ribbon of habitats along the temperate belt — sky bridges, sulfur-tinted sunbeams, and the best "we live in a poem" selfies in the system.' },
+        { t: 'Lightning Salon Decks', d: 'Venus throws electrical tantrums that would humble Earth. Watch from shielded lounges with cocktails named after deities nobody remembers.' },
+        { t: 'Aerial Gondola Network', d: 'Silent tethers between aerostats. Below, nothing but heat; above, a butterscotch sky that never gets old.' },
+        { t: 'Acid Haze Gallery', d: 'Artists project UV-reactive murals into the clouds. The planet collaborates by erasing them weekly. Impermanence as installation art.' }
+      ],
+      activities: [
+        { t: 'Zipline Between Aerostats', d: 'Clip in, breathe normally, scream tastefully. Wind shear is part of the percussion section.' },
+        { t: 'Sulfur Sunset Watercolor Class', d: 'Pigments behave strangely in filtered light. Instructors blame "Venus optimism." Results are always orange and always honest.' },
+        { t: 'Thunder Sonnet Workshop', d: 'Write fourteen lines while lightning sketches your window. Rhyme schemes optional; awe mandatory.' },
+        { t: 'Cloud-Harvest Tea Ceremony', d: 'Condensate from engineered collectors, steeped while the city sways. You will swear it tastes like static and courage.' }
+      ],
+      quote: 'Pack layers for the same temperature always. The drama is in the view, not the thermostat.'
+    },
+    titan: {
+      icon: '🟠',
+      title: 'Titan',
+      sub: 'Field Guide // Orange Haze & Methane Shores',
+      lead: 'Gravity whispers, the air is thick enough to hug you back, and Saturn hangs in the sky like a ringed deity who remembered your birthday. Welcome to the solar system\'s moodiest beach town.',
+      sights: [
+        { t: 'Kraken Mare Glass Walk', d: 'Stroll above liquid hydrocarbon seas that would rather be lakes. Reflections are slow and oily; your footsteps sound like a secret.' },
+        { t: 'Saturn Gaze Points', d: 'Rings edge-on, then wide — a celestial wink on a ninety-day rhythm. Astronomers pretend not to cry.' },
+        { t: 'Dune Labyrinth of Belet', d: 'Organic sand in long, patient waves. No water carved this; time and tides of chemistry did.' },
+        { t: 'Cryovolcano Lookouts', d: 'Ice and patience erupting. Think of them as planet-scale aromatherapy, minus the liability waiver for awe.' }
+      ],
+      activities: [
+        { t: 'Methane Kayak Sprint (Guided)', d: 'Paddles designed for fluids that are not water. Splashes do not wet you; they introduce you to new adjectives.' },
+        { t: 'Haze-Filtered Choir', d: 'Sing in an atmosphere that eats high frequencies. Bass carries; sopranos become philosophy.' },
+        { t: 'Tholin Sand Sculpture Contest', d: 'Build castles from sticky orange chemistry. Judges award "Most Likely to Outlive Humanity."' },
+        { t: 'Acoustic Geology Walk', d: 'Tap a cliff; listen to ice sing back. Every formation is a percussion instrument if you are brave enough.' }
+      ],
+      quote: 'If someone offers you "fresh Titan air" in a bottle, it is a souvenir. Do not huff the souvenir.'
+    },
+    pluto: {
+      icon: '❄️',
+      title: 'Pluto',
+      sub: 'Field Guide // The Edge of the Sun\'s Reach',
+      lead: 'The Sun is a bright coin at this distance. Days are long, nights are deeper than philosophy, and the heart on the surface is not metaphor — it is nitrogen ice with opinions.',
+      sights: [
+        { t: 'Sputnik Planitia Stroll', d: 'Convective cells slowly churn like a sleeping brain. You walk on something alive, just on geological time — pack patience and very warm boots.' },
+        { t: 'Tombaugh Regio Panorama', d: 'Light and dark meet in a cosmic Rorschach. Everyone sees something different; Pluto does not judge.' },
+        { t: 'Ice Geyser Watch (Seasonal)', d: 'When the 248-year orbit wakes the volatiles, plumes stitch the sky. Bring cocoa; forget blinking.' },
+        { t: 'Charon Mutual Rise', d: 'Binary worlds doing a slow dance. You are standing on one partner watching the other blush at the horizon.' }
+      ],
+      activities: [
+        { t: 'Nitrogen Ice Sketching', d: 'Scratch drawings that sublime away by afternoon — the original ephemeral art residency.' },
+        { t: 'Dim-Sun Photography Marathon', d: 'Light arrives like a polite suggestion. Long exposures, long thoughts, long silences nobody ruins.' },
+        { t: 'Letter to the Sun Workshop', d: 'Write what you would say if photons took decades to deliver mail. Tear-jerker potential: astronomical.' },
+        { t: 'Twilight Yoga on the Plains', d: 'Sunrise and sunset blur together. Poses are optional; wonder is default.' }
+      ],
+      quote: 'Pluto is not "demoted"; it is doing its own thing at the party\'s edge. Respect the introvert planet.'
+    },
+    kepler: {
+      icon: '🌿',
+      title: 'Kepler-452b',
+      sub: 'Field Guide // Earth\'s Older Cousin, 1,402 Ly Away',
+      lead: 'You did not take a weekend trip; you inherited a saga. This world is roomier than Earth, older than our Sun\'s midlife crisis, and still deciding what kind of story it wants to tell.',
+      sights: [
+        { t: 'Orbital Blue-Green Survey', d: 'From the gateway, continents read like unfinished drafts — clouds, oceans maybe, continents maybe. Every pass updates your imagination.' },
+        { t: 'Super-Earth Horizon Math', d: 'Guides explain gravity with apples, then apologize because apples are heavier here. Walking feels earnest.' },
+        { t: 'Stellar Garden Observation', d: 'Parent star is Sun-like but senior: steadier burn, subtler tantrums. Sunset colors feel familiar and haunted.' },
+        { t: 'Generational Archive Galleries', d: 'Shipboard museums of the voyage out — quilts, journals, games invented in transit. History written in boredom and brilliance.' }
+      ],
+      activities: [
+        { t: 'Cousin Earth Bingo', d: 'Spot clouds, coastlines, anything that rhymes with home. Shout "Bingo" carefully; sound carries oddly in excursion pods.' },
+        { t: 'Intergenerational Story Circle', d: 'Grandparents, parents, kids — swap chapters of the crossing. Someone always cries during the cryo-sleep lullabies episode.' },
+        { t: 'Speculative Ecology Hike', d: 'Biologists pitch three plausible ecosystems; you vote with stickers. Science has never been this democratic or this chaotic.' },
+        { t: 'Long-Orbit Journaling Retreat', d: 'One page per year of approach. By arrival, you have accidentally written a novel. Editors orbit separately.' }
+      ],
+      quote: 'The price tag is not for distance alone — it is for the privilege of watching your species think in centuries instead of quarters.'
+    },
+    proxima: {
+      icon: '🌗',
+      title: 'Proxima Centauri b',
+      sub: 'Field Guide // Twenty Years by Sail, Forever in the Twilight',
+      lead: 'Tidal locking means eternal day on one cheek and eternal night on the other. Between them: the terminator, a belt of maybe — the solar system\'s most dramatic gradient, and your new favorite hiking trail.',
+      sights: [
+        { t: 'Terminator Ribbon Cities', d: 'Habitats straddle dusk forever. Streetlights are a philosophy; windows face permanent sunset gradients.' },
+        { t: 'Red Dwarf Zenith', d: 'Proxima hangs huge and moody. Flares happen; auroras answer. Skywatching doubles as cardio.' },
+        { t: 'Subsolar Glare Fields', d: 'The day side is not "fun hot" — it is telescope hot. Tours stay at safe angles; drama is supplied by optics, not burns.' },
+        { t: 'Anti-Stellar Quiet Parks', d: 'Night-side preserves where stars do not compete with a sun. Milky Way as default ceiling.' }
+      ],
+      activities: [
+        { t: 'Twilight Ultramarathon (Segmented)', d: 'Run where the temperature is merely "challenging," not "folklore." Medals glow under red light.' },
+        { t: 'One Foot in Day, One in Night Yoga', d: 'Balance poses on the literal line between worlds. Instructors say "root down" and mean it cosmically.' },
+        { t: 'Flare Photography Clinic', d: 'Filters rated for stellar temper tantrums. If your camera survives, your portfolio becomes legally distinct from Earth\'s.' },
+        { t: 'Red Sun Haiku Slam', d: 'Seventeen syllables about light that arrives with personality. Judges include a poet and an astrophysicist who pretend not to compete.' }
+      ],
+      quote: 'Nearest does not mean tame. Proxima b is a neighbor who plays loud music sometimes — pack curiosity and radiation smarts.'
+    }
+  };
+
+  function renderGuideHTML(g) {
+    const li = (items) => items.map(x => `<li><strong>${x.t}</strong> ${x.d}</li>`).join('');
+    return `
+      <p class="guide-lead">${g.lead}</p>
+      <h3 class="guide-h3">Sightseeing &amp; Landmarks</h3>
+      <ul class="guide-list">${li(g.sights)}</ul>
+      <h3 class="guide-h3">Creative Activities</h3>
+      <ul class="guide-list">${li(g.activities)}</ul>
+      <p class="guide-quote">${g.quote}</p>
+    `;
+  }
+
+  function openDestGuide(key) {
+    closeModal();
+    const g = DEST_GUIDES[key];
+    if (!g) return;
+    document.getElementById('guideIcon').textContent = g.icon;
+    document.getElementById('guideTitleText').textContent = g.title;
+    document.getElementById('guideSub').textContent = g.sub;
+    document.getElementById('guideScroll').innerHTML = renderGuideHTML(g);
+    document.getElementById('guideOverlay').classList.add('active');
+    document.body.style.overflow = 'hidden';
+    setTimeout(() => document.querySelector('.guide-close').focus(), 50);
+  }
+
+  function closeDestGuide() {
+    document.getElementById('guideOverlay').classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  document.getElementById('guideOverlay').addEventListener('click', (e) => {
+    if (e.target === e.currentTarget) closeDestGuide();
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      if (document.getElementById('guideOverlay').classList.contains('active')) closeDestGuide();
+      else if (document.getElementById('modalOverlay').classList.contains('active')) closeModal();
+    }
   });
 
   // Scroll reveal
