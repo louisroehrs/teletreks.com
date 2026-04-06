@@ -482,6 +482,7 @@
     opacity: 0;
     transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
     white-space: nowrap;
+    width: 150px;
   }
   .dest-buy:hover { background: var(--accent2); }
 
@@ -507,6 +508,7 @@
     opacity: 0;
     transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
     white-space: nowrap;
+    width: 150px;
   }
   .dest-guide:hover {
     background: rgba(0,212,255,0.08);
@@ -816,6 +818,10 @@
     margin-bottom: 60px;
   }
 
+  .footer-logo-link {
+    text-decoration: none;
+    display: inline-block;
+  }
   .footer-logo {
     font-family: 'Bebas Neue', sans-serif;
     font-size: 36px;
@@ -1140,6 +1146,7 @@
     .modal { padding: 40px 24px; }
   }
 </style>
+<link rel="stylesheet" href="css/pages.css">
 </head>
 <body>
 
@@ -1150,7 +1157,7 @@
 
 <!-- NAV -->
 <nav>
-  <a href="#" class="nav-logo">TELE<span>TREKS</span></a>
+  <a href="index.html" class="nav-logo">TELE<span>TREKS</span></a>
   <ul class="nav-links">
     <li><a href="#destinations">Destinations</a></li>
     <li><a href="#how">How It Works</a></li>
@@ -1550,7 +1557,7 @@
 <footer>
   <div class="footer-top">
     <div>
-      <div class="footer-logo">TELE<span>TREKS</span></div>
+      <a href="index.html" class="footer-logo-link"><div class="footer-logo">TELE<span>TREKS</span></div></a>
       <p class="footer-desc">The universe's most trusted interplanetary carrier. Operating since 2041, connecting humanity across the solar system and beyond — one launch at a time.</p>
     </div>
     <div>
@@ -1567,21 +1574,21 @@
     <div>
       <p class="footer-col-title">Company</p>
       <ul class="footer-links">
-        <li><a href="#">About TELETREKS</a></li>
-        <li><a href="#">Our Fleet</a></li>
-        <li><a href="#">Safety Record</a></li>
-        <li><a href="#">Press & Media</a></li>
-        <li><a href="#">Careers</a></li>
+        <li><a href="about.html">About TELETREKS</a></li>
+        <li><a href="fleet.html">Our Fleet</a></li>
+        <li><a href="safety.html">Safety Record</a></li>
+        <li><a href="press.html">Press &amp; Media</a></li>
+        <li><a href="careers.html">Careers</a></li>
       </ul>
     </div>
     <div>
       <p class="footer-col-title">Support</p>
       <ul class="footer-links">
-        <li><a href="#">Pre-Flight Medical</a></li>
-        <li><a href="#">Baggage Policy</a></li>
-        <li><a href="#">Cryo Care Guide</a></li>
-        <li><a href="#">Contact Mission Control</a></li>
-        <li><a href="#">Emergency Protocols</a></li>
+        <li><a href="preflight-medical.html">Pre-Flight Medical</a></li>
+        <li><a href="baggage.html">Baggage Policy</a></li>
+        <li><a href="cryo-care.html">Cryo Care Guide</a></li>
+        <li><a href="contact.html">Contact Mission Control</a></li>
+        <li><a href="emergency.html">Emergency Protocols</a></li>
       </ul>
     </div>
   </div>
